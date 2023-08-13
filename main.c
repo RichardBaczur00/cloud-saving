@@ -3,10 +3,11 @@
 int main(void) {
     Config* conf = loadConfig("chestie.json");
 
-    printf("Num fields: %d\n", conf->numFields);
+    printf("Num fields: %ld\n", conf->numFields);
 
     for (int i = 0; i < conf->numFields; ++i) {
-        printf("%s of type %s at %d offset\n", conf->fields->name, conf->fields->type, conf->fields->offset);
+        FieldConfig field = conf->fields[i];
+        printf("%s of type %s at %ld offset\n", field.name, field.type, field.offset);
     }
 
     return 0;

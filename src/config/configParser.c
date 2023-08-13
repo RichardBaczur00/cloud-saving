@@ -22,7 +22,6 @@ Config* loadConfig(const char* filename) {
     }
 
     json_object *root = json_object_from_file(filename);
-    printf("Json fields:\n %s\n", json_object_to_json_string(root));
 
     if (!root) {
         return NULL;
@@ -32,12 +31,14 @@ Config* loadConfig(const char* filename) {
     printf("Json fields:\n %s\n", json_object_to_json_string(fields));
     config->numFields = json_object_array_length(fields);
     config->fields = (FieldConfig*)malloc(config->numFields * sizeof(FieldConfig));
+    printf("Num fields: %ld\n", config->numFields);
 
-    for (int i = 0; i < config->numFields; ++i) {
+    for (size_t i = 0; i < config->numFields; ++i) {
         json_object *field = json_object_array_get_idx(fields, i);
         json_object *name = json_object_object_get(field, "name");
         json_object *type = json_object_object_get(field, "type");
         json_object *offset = json_object_object_get(field, "offset");
+        printf("name: %s\ntype: %s\noffset: %d\n", json_object_get_string(name), json_object_get_string(type), json_object_get_int(offset));
         strcpy(config->fields[i].name, json_object_get_string(name));
         strcpy(config->fields[i].type, json_object_get_string(type));
         config->fields[i].offset = json_object_get_int(offset);
@@ -45,7 +46,7 @@ Config* loadConfig(const char* filename) {
 
     free(buffer);
 
-    return NULL;
+    return config;
 }
 
 void freeConfig(Config* config) {
